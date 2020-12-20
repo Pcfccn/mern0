@@ -1,0 +1,5 @@
+{
+    "port": 27017,
+    "mongoUri": "mongodb+srv://roman:123qwe@cluster0.wbkmi.mongodb.net/mern0?retryWrites=true&w=majority",
+    "jwtSecret": "testSecretKey"
+}
