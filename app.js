@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/t', require('./routes/auth.routes'));
 
 const PORT = config.get('port');
 
@@ -14,7 +15,8 @@ async function start() {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
-        })
+        });
+        app.listen(PORT, () => console.log(`App has been started on port ${PORT}...`));
     } catch (error) {
         console.log('Server erros: ', error.message);
         process.exit(1);
@@ -22,7 +24,3 @@ async function start() {
 }
 
 start();
-
-app.listen(PORT, () => {
-    console.log(`App has been started on port ${PORT}...`);
-});

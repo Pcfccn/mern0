@@ -2,9 +2,13 @@ const {Router} = require('express');
 const router = Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const {check, validationResult} = require('exspress-validator');
+const {check, validationResult} = require('express-validator');
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('config');
+
+router.get('/test', () => {
+    console.log('fire!');
+});
 
 router.post(
     '/register',
@@ -14,6 +18,7 @@ router.post(
     ],
     async (req, res) => {
     try {
+        debugger
         const errors = validationResult(req);
         if (!errors.isEmpty) {
             res.status(400).json({
