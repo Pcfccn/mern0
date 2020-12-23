@@ -16,8 +16,8 @@ export const AuthPage = () => {
 
   const handleRegistrationButtonClick = async () => {
     try {
-      const data = await request("api/auth/register", "POST", { ...form });
-      console.log("data", data);
+      const data = await request("/api/auth/register", "POST", { ...form });
+      console.log("auth page data", data);
     } catch (error) {}
   };
 
