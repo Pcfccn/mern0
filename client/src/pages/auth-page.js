@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { useHTTP } from "../hooks/http.hook";
 import { useMessage } from "../hooks/message.hook";
 
 export const AuthPage = () => {
-  // eslint-disable-next-line
+  const auth = useContext(AuthContext);
   const { loading, error, request, clearError } = useHTTP();
   const message = useMessage();
   const [form, setForm] = useState({
@@ -29,7 +30,7 @@ export const AuthPage = () => {
   const handleLogginButtonClick = async () => {
     try {
       const data = await request("/api/auth/login", "POST", { ...form });
-      message(data.message);
+      auth.login(data.token, data.userId)
     } catch (error) {}
   };
 
