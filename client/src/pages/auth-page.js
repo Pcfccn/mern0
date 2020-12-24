@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHTTP } from "../hooks/http.hook";
+import { useMessage } from "../hooks/message.hook";
 
 export const AuthPage = () => {
   // eslint-disable-next-line
   const { loading, error, request, clearError } = useHTTP();
-
+  const message = useMessage();
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    message(error);
+    clearError();
+  }, [error, message, clearError])
 
   const handleFormChange = (evt) => {
     setForm({ ...form, [evt.target.name]: evt.target.value });
@@ -17,7 +23,13 @@ export const AuthPage = () => {
   const handleRegistrationButtonClick = async () => {
     try {
       const data = await request("/api/auth/register", "POST", { ...form });
-      console.log("auth page data", data);
+      message(data.message);
+    } catch (error) {}
+  };
+  const handleLogginButtonClick = async () => {
+    try {
+      const data = await request("/api/auth/login", "POST", { ...form });
+      message(data.message);
     } catch (error) {}
   };
 
@@ -55,6 +67,7 @@ export const AuthPage = () => {
               className="btn yellow darken-4"
               style={{ marginRight: 10 }}
               disabled={loading}
+              onClick={handleLogginButtonClick}
             >
               Войти
             </button>

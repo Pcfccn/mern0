@@ -6,20 +6,6 @@ const { check, validationResult } = require("express-validator");
 const jsonwebtoken = require("jsonwebtoken");
 const config = require("config");
 
-router.get("/test", (req, res) => {
-  console.log("test get work!");
-  res.send("sag");
-});
-
-router.post("/testPost", (req, res) => {
-  try {
-    console.log("testPost work!");
-    res.send("Hi, I have been worked");
-  } catch (error) {
-    console.log(error);
-  }
-});
-
 router.post(
   "/register",
   [
@@ -29,21 +15,19 @@ router.post(
   async (req, res) => {
     try {
       const errors = validationResult(req);
-console.log(errors);
       if (!errors.isEmpty()) {
         res.status(400).json({
           errors: errors.array(),
           message: "Invalid registration data",
         });
       }
-      console.log("req.body tut!", req.body);
       const { email, password } = req.body;
       const condidate = await User.findOne({ email });
 
       if (condidate) {
         return res
           .status(400)
-          .json({ message: "Sorry. user with this email already exist" });
+          .json({ message: "Sorry, user with this email already exist" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -53,7 +37,7 @@ console.log(errors);
 
       res.status(201).json("User has been created");
     } catch (error) {
-      res.status(500).json({message: error.message || "ошибочка нахуй"});
+      res.status(500).json({message: error.message || "Some error of server"});
     }
   }
 );
@@ -72,7 +56,6 @@ router.post(
           message: "Invalid login data",
         });
       }
-
       const { email, password } = req.body;
       const user = await User.findOne({ email });
 
@@ -82,9 +65,9 @@ router.post(
           .json({ message: "Sorry. user with this email  doesnt exist" });
       }
 
-      const isMatch = await bcrypt.compare(password.user.password);
+      const isMatch = await bcrypt.compare(password, user.password);
 
-      if (!isMach) {
+      if (!isMatch) {
         return res.status(400).json({ message: "Invalid password" });
       }
 
@@ -94,9 +77,9 @@ router.post(
         { expiresIn: "1h" }
       );
 
-      res.json({ token, userId: user.id });
+      res.json({ message: 'logged in!', token, userId: user.id });
     } catch (error) {
-      res.status(500).json({ message: "Opps, error, just try again" });
+      res.status(500).json({ error: error.message, message: "Opps, error, just try again" });
     }
   }
 );
